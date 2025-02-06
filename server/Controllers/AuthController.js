@@ -127,48 +127,41 @@ const logout = (_,res) =>{
 )}
 }
 
-const getUserProfile = async (req,res) =>{
+const getUserProfile = async (req, res) => {
     try {
         const userId = req.tokenId;
         const user = await userModel
-  .findById(userId)
-  .select("-password")
-  .populate({
-    path: "enrolledCourses",
-    populate: {
-      path: "creator", // Populating the creator inside each enrolled course
-      select: "name email photoUrl", // Selecting only required fields
-    },
-  })
-  
+            .findById(userId)
+            .select("-password")
+            .populate({
+                path: "enrolledCourses",
+                populate: {
+                    path: "creator", 
+                    select: "name email photoUrl", 
+                },
+            });
 
-        if(!user){
+        if (!user) {
             return res.status(404).json({
-                message:"Profile not found",
+                message: "Profile not found",
                 success: false,
-            })
+            });
         }
+
         return res.status(200).json({
-            message:"Profile found",
-            success:true,
+            message: "Profile found",
+            success: true,
             user,
+        });
 
-        })
-
-
-
-        
     } catch (e) {
-        console.log("error",e);
+        console.error("Error fetching profile:", e);
         res.status(500).json({
-            meassage:"Error in getting profile",
-            success:false,
-        })
-        
+            message: "Error in getting profile",
+            success: false,
+        });
     }
-}
-
-const sharp = require('sharp');
+};
 
 const editProfile = async (req, res) => {
     try {
@@ -184,42 +177,47 @@ const editProfile = async (req, res) => {
             });
         }
 
-        if (user.photourl){
-            const publicId = user.photourl.split("/").pop().split(".")[0];
-            deleteMedia(publicId);
+        let photoUrl = user.photoUrl;
+
+        if (profilePhoto) {
+            // Delete old profile picture if it exists
+            if (user.photoUrl) {
+                const publicId = user.photoUrl.split("/").pop().split(".")[0]; 
+                await deleteMedia(publicId);
+            }
+
+            // Upload new image
+            const response = await uploadMedia(profilePhoto.buffer);
+            photoUrl = response.secure_url;
+            console.log("New profile picture uploaded:", photoUrl);
         }
 
-        const compressedImagePath = `./uploads/compressed_${profilePhoto.filename}`;
-        await sharp(profilePhoto.path)
-            .resize(200)
-            .jpeg({ quality: 50 })
-            .toFile(compressedImagePath);
+        // Prepare updated data
+        const updatedData = { name };
+        if (photoUrl) updatedData.photoUrl = photoUrl;
 
-        const response = await uploadMedia(compressedImagePath);
-        const photoUrl = response.secure_url;
-
-        const updatedData = {
-            name,
-            photoUrl,
-        };
-
-        const updateUser = await userModel.findByIdAndUpdate(userId, updatedData, {
+        // Update the user
+        const updatedUser = await userModel.findByIdAndUpdate(userId, updatedData, {
             new: true,
         }).select("-password");
 
         return res.status(200).json({
             success: true,
-            user: updateUser,
+            updatedUser,
             message: "Profile updated successfully",
         });
 
-    } catch (e) {
+    } catch (error) {
+        console.error("Error in editing profile:", error);
         res.status(500).json({
             message: "Error in editing profile",
             success: false,
+            error: error.message,
         });
     }
 };
+
+
 
 
 

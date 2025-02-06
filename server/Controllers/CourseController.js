@@ -70,9 +70,9 @@ const editCourse = async (req, res) => {
   try {
     console.log("Starting to update course...");
 
-    const courseId = req.params.courseId;
+    const { courseId } = req.params;
     const { courseTitle, subTitle, description, category, courseLevel, coursePrice } = req.body;
-    const thumbnail = req.file;
+    const thumbnail = req.file; // multer uploads file as a buffer
 
     console.log("Course ID:", courseId);
     console.log("Incoming data:", {
@@ -87,39 +87,35 @@ const editCourse = async (req, res) => {
     let course = await Course.findById(courseId);
     if (!course) {
       console.log("Course not found:", courseId);
-      return res.status(404).json({
-        message: "Course not found",
-        success: false,
-      });
+      return res.status(404).json({ message: "Course not found", success: false });
     }
 
     let courseThumbnail;
     if (thumbnail) {
-      console.log("New thumbnail detected, processing upload...");
+      console.log("New thumbnail detected, uploading to Cloudinary...");
 
-      // Check if there's an existing thumbnail to delete
+      // Delete existing thumbnail if available
       if (course.courseThumbnail) {
-        const publicId = course.courseThumbnail.split("/").pop().split('.')[0];
+        const publicId = course.courseThumbnail.split('/').pop().split('.')[0];
         console.log("Deleting old thumbnail with public ID:", publicId);
-        await deleteMedia(publicId); // Assuming deleteMedia handles the deletion correctly
+        await deleteMedia(publicId);
       }
 
-      // Upload the new thumbnail and get the URL
-      courseThumbnail = await uploadMedia(thumbnail.path);
-      console.log("Thumbnail uploaded successfully:", courseThumbnail?.secure_url);
+      // Upload the new thumbnail to Cloudinary
+      const uploadResponse = await uploadMedia(thumbnail.buffer); // Use `buffer` instead of `path`
+      courseThumbnail = uploadResponse.secure_url;
+      console.log("Thumbnail uploaded successfully:", courseThumbnail);
     }
 
     // Prepare the update data dynamically
     const updateData = {};
-
-    // Only update fields that are provided in the request
     if (courseTitle) updateData.courseTitle = courseTitle;
     if (subTitle) updateData.subTitle = subTitle;
     if (description) updateData.description = description;
     if (category) updateData.category = category;
-    if (courseLevel) updateData.courseLevel = courseLevel; // Don't overwrite with null if not provided
+    if (courseLevel) updateData.courseLevel = courseLevel;
     if (coursePrice) updateData.coursePrice = coursePrice;
-    if (courseThumbnail) updateData.courseThumbnail = courseThumbnail?.secure_url;
+    if (courseThumbnail) updateData.courseThumbnail = courseThumbnail;
 
     console.log("Updating course with data:", updateData);
 
@@ -139,9 +135,12 @@ const editCourse = async (req, res) => {
     res.status(500).json({
       message: "Failed to update course",
       success: false,
+      error: error.message,
     });
   }
 };
+
+
 const removeCourse = async (req, res) => {
   try {
     console.log("Starting course deletion...");
@@ -271,11 +270,10 @@ const updateLecture = async (req, res) => {
     const { lectureTitle, isPreviewFree, videoInfo } = req.body;
     const { courseId, lectureId } = req.params;
 
-    // Log lectureId and courseId
+    // Find the lecture
     console.log(`Finding lecture with ID: ${lectureId}`);
-    
     const lecture = await Lecture.findById(lectureId);
-    
+
     if (!lecture) {
       console.log("Lecture not found!");
       return res.status(404).json({
@@ -286,26 +284,37 @@ const updateLecture = async (req, res) => {
 
     console.log("Lecture found:", lecture);
 
+    // Check if a new video is being uploaded
+    if (videoInfo?.videoUrl && videoInfo?.publicId) {
+      if (lecture.publicId) {
+        console.log("Deleting old video:", lecture.publicId);
+        await deleteVideo(lecture.publicId); // Delete previous video from Cloudinary
+      }
+
+      console.log("Uploading new video...");
+      const uploadResponse = await uploadMedia(videoInfo.videoUrl);
+      if (uploadResponse) {
+        lecture.videoUrl = uploadResponse.secure_url;
+        lecture.publicId = uploadResponse.public_id;
+        console.log("New video uploaded:", uploadResponse.secure_url);
+      }
+    }
+
+    // Update other lecture details if provided
     if (lectureTitle) {
       lecture.lectureTitle = lectureTitle;
       console.log("Updated lectureTitle:", lectureTitle);
-    }
-    if (videoInfo?.videoUrl) {
-      lecture.videoUrl = videoInfo.videoUrl;
-      console.log("Updated videoUrl:", videoInfo.videoUrl);
-    }
-    if (videoInfo?.publicId) {
-      lecture.publicId = videoInfo.publicId;
-      console.log("Updated publicId:", videoInfo.publicId);
     }
     if (typeof isPreviewFree !== "undefined") {
       lecture.isPreviewFree = isPreviewFree;
       console.log("Updated isPreviewFree:", isPreviewFree);
     }
 
+    // Save the updated lecture
     await lecture.save();
-    console.log("Lecture saved successfully.");
+    console.log("Lecture updated successfully.");
 
+    // Find the course and add lecture if missing
     console.log(`Finding course with ID: ${courseId}`);
     const course = await Course.findById(courseId);
 
@@ -320,8 +329,9 @@ const updateLecture = async (req, res) => {
       message: "Lecture updated successfully",
       success: true,
     });
-  } catch (e) {
-    console.error("Error updating lecture:", e);
+
+  } catch (error) {
+    console.error("Error updating lecture:", error);
     res.status(500).json({
       message: "Failed to update the lecture",
       success: false,

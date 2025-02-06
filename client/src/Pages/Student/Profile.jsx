@@ -17,7 +17,7 @@ const Profile = () => {
   const { data, isLoading ,refetch } = useGetUserQuery();
   const [updateUser, { isLoading: updateLoading }] = useUpdateUserMutation();
 
-  console.log(data);
+  console.log(data,"data");
 
   
   const user = data?.user || {}; // Safely accessing user with fallback

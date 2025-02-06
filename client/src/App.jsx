@@ -18,7 +18,7 @@ import LecturePage from "./Pages/Admin/LecturePage.jsx";
 import EditLecture from "./Pages/Admin/EditLecture.jsx";
 import CourseDetail from "./Pages/Student/CourseDetail.jsx";
 import CourseProgress from "./Pages/Student/CourseProgress.jsx";
-import SearchPage from "./Pages/Student/SearchPage.jsx";
+import SearchPage from "./Pages/Student/searchPage.jsx";
 import { Authenticated, ProtectedRoute, AdminRoute } from "./AppComonents/Commom/ProtectedRoutes.jsx";
 
 function App() {

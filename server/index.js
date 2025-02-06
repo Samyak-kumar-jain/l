@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.ORIGIN || "http://localhost:5173",
+    origin: process.env.ORIGIN || "https://l-5.onrender.com",
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],
     credentials: true,   

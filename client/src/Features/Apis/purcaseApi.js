@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_USER_COURSE_PURCHASE_API = "http://localhost:5000/api/purchase/";
+const BASE_USER_COURSE_PURCHASE_API = "https://l-5.onrender.com/api/purchase/";
 
 export const purchaseApi = createApi({
     reducerPath:"purchaseApi",

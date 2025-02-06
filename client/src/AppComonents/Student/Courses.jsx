@@ -1,7 +1,7 @@
 import React from 'react';
-import { SkeletonCard } from '../Commom/CourseSkeleton';
-import Course from './course';
-import { useGetPublishCourseQuery } from '@/Features/Apis/courseApi';
+import { SkeletonCard } from '../Commom/CourseSkeleton.jsx';
+import Course from './course.jsx';
+import { useGetPublishCourseQuery } from '../../Features/Apis/courseApi.js';
 
 const Courses = () => {
   const {data,isLoading,isError} = useGetPublishCourseQuery();

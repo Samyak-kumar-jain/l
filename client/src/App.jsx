@@ -4,23 +4,22 @@ import "./index.css";
 import { ToastContainer } from "react-toastify";
 
 import { ThemeProvider } from "./components/theme-provider";
-import Login from "./Pages/Auth/Login";
-import HomePage from "./Pages/Student/HomePage";
-import Auth from "./AppComonents/Auth/Auth";
-import HeroPage from "./AppComonents/Student/HeroPage";
-import MyLearning from "./Pages/Student/MyLearning";
-import Profile from "./Pages/Student/Profile";
-import Admin from "./AppComonents/Admin/Admin";
-import Dashboard from "./Pages/Admin/Dashboard";
-import AddCourse from "./Pages/Admin/AddCourse";
-import CourseTable from "./AppComonents/Admin/CourseTable";
-import EditCourse from "./Pages/Admin/EditCourse";
-import LecturePage from "./Pages/Admin/LecturePage";
-import EditLecture from "./Pages/Admin/EditLecture";
-import CourseDetail from "./Pages/Student/CourseDetail";
-import CourseProgress from "./Pages/Student/CourseProgress";
-import SearchPage from "./Pages/Student/SearchPage";
-import { Authenticated, ProtectedRoute, AdminRoute } from "./AppComonents/Commom/ProtectedRoutes";
+import HomePage from "./Pages/Student/HomePage.jsx";
+import Auth from "./AppComonents/Auth/Auth.jsx";
+import HeroPage from "./AppComonents/Student/HeroPage.jsx";
+import MyLearning from "./Pages/Student/MyLearning.jsx";
+import Profile from "./Pages/Student/Profile.jsx";
+import Admin from "./AppComonents/Admin/Admin.jsx";
+import Dashboard from "./Pages/Admin/Dashboard.jsx";
+import AddCourse from "./Pages/Admin/AddCourse.jsx";
+import CourseTable from "./AppComonents/Admin/CourseTable.jsx";
+import EditCourse from "./Pages/Admin/EditCourse.jsx";
+import LecturePage from "./Pages/Admin/LecturePage.jsx";
+import EditLecture from "./Pages/Admin/EditLecture.jsx";
+import CourseDetail from "./Pages/Student/CourseDetail.jsx";
+import CourseProgress from "./Pages/Student/CourseProgress.jsx";
+import SearchPage from "./Pages/Student/SearchPage.jsx";
+import { Authenticated, ProtectedRoute, AdminRoute } from "./AppComonents/Commom/ProtectedRoutes.jsx";
 
 function App() {
   const router = createBrowserRouter([

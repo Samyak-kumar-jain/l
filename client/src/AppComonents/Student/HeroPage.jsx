@@ -1,5 +1,5 @@
 import React from 'react'
-import GlassNavbar from '../Commom/Navbar'
+import GlassNavbar from '../Commom/Navbar.jsx'
 import { Outlet } from 'react-router-dom'
 
 const HeroPage = () => {

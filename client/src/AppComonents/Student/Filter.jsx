@@ -1,5 +1,5 @@
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
+import { Checkbox } from '../../components/ui/checkbox.jsx';
+import { Label } from '../../components/ui/label.jsx';
 import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue, SelectGroup } from '@/components/ui/select';
 import React, { useState } from 'react';
 

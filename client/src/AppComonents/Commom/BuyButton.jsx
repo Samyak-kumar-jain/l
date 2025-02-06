@@ -1,5 +1,5 @@
-import { Button } from '../../components/ui/button';
-import { useCreateCheckoutSessionMutation } from '@/Features/Apis/purcaseApi'
+import { Button } from '../../components/ui/button.jsx';
+import { useCreateCheckoutSessionMutation } from '../../Features/Apis/purcaseApi.js'
 import { Loader2Icon } from 'lucide-react';
 import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'; // Import toast

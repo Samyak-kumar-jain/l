@@ -1,16 +1,16 @@
-import { Button } from '../../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
-import { Input } from '../../components/ui/input'
-import { Label } from '../../components/ui/label'
+import { Button } from '../../components/ui/button.jsx'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card.jsx'
+import { Input } from '../../components/ui/input.jsx'
+import { Label } from '../../components/ui/label.jsx'
 import { LucideDelete } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { Switch } from "../../components/ui/switch"
+import { Switch } from "../../components/ui/switch.jsx"
 import axios from 'axios'
-import { Progress } from '../../components/ui/progress'
+import { Progress } from '../../components/ui/progress.jsx'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'; // Import toast
 import 'react-toastify/dist/ReactToastify.css';
-import { useEditLectureMutation, useGetLectureQuery, useRemoveLectureMutation } from '../../Features/Apis/courseApi'
+import { useEditLectureMutation, useGetLectureQuery, useRemoveLectureMutation } from '../../Features/Apis/courseApi.js'
 
 const LectureTab = () => {
     const navigate = useNavigate();

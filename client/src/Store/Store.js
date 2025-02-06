@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./rootReducer.js";
-import { authApi } from "@/Features/Apis/authApi.js";
-import { courseApi } from "@/Features/Apis/courseApi.js";
-import { purchaseApi } from "@/Features/Apis/purcaseApi.js";
-import { progressApi } from "@/Features/Apis/progressApi.js";
+import { authApi } from "../Features/Apis/authApi.js";
+import { courseApi } from "../Features/Apis/courseApi.js";
+import { purchaseApi } from "../Features/Apis/purcaseApi.js";
+import { progressApi } from "../Features/Apis/progressApi.js";
 
 
 

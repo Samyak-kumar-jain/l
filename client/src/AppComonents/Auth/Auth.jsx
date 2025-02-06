@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "../../Pages/Auth/Login";
+import Login from "../../Pages/Auth/Login.jsx";
 
 
 
